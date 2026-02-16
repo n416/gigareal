@@ -301,7 +301,7 @@ body {
 .status-message.error { color: #dc3545; }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 600px) and (orientation: landscape) {
     /* Background Canvas */
     #canvas-container {
         pointer-events: none; /* Ignore all touch events on canvas */
