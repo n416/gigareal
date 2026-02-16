@@ -107,11 +107,7 @@ function initThreeJS() {
     let gravityX = 0;
     let gravityY = 0;
 
-    // Bounds
-    const bounds = {
-        width: 30, // Approximate scene width at z=0 (given camera z=5)
-        height: 15
-    };
+    // Bounds logic removed, replaced with dynamic calculation in animate()
 
     // Gyroscope Permission Handling
     const gyroBtnContainer = document.getElementById('gyro-controls');
@@ -199,19 +195,45 @@ function initThreeJS() {
             // Add slight ambient movement
             positions[i3] += Math.sin(clock.getElapsedTime() * 0.5 + i) * 0.002;
 
-            // Boundary Wrap
-            if (positions[i3] > bounds.width / 2) positions[i3] -= bounds.width;
-            if (positions[i3] < -bounds.width / 2) positions[i3] += bounds.width;
+            // Dynamic Bounds Calculation based on Camera FOV
+            // Calculate visible height at the particle's Z depth
+            // Camera is at z=5. Particle z is 0 (since we only set x,y in geometry initialization, z defaults to 0)
+            // But let's be robust:
+            const particleZ = positions[i3 + 2] || 0;
+            const dist = camera.position.z - particleZ;
 
-            if (positions[i3 + 1] > bounds.height / 2) positions[i3 + 1] -= bounds.height;
-            if (positions[i3 + 1] < -bounds.height / 2) positions[i3 + 1] += bounds.height;
+            // Visible height at this distance = 2 * dist * tan(fov / 2)
+            // generic formula: visible_height = 2 * distance * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+            const vHeight = 2 * dist * Math.tan((camera.fov * Math.PI / 180) / 2);
+            const vWidth = vHeight * camera.aspect;
+
+            // Add a small buffer to avoid popping
+            const borderX = vWidth / 2 + 1;
+            const borderY = vHeight / 2 + 1;
+
+            // Boundary Wrap
+            if (positions[i3] > borderX) {
+                positions[i3] = -borderX;
+            }
+            if (positions[i3] < -borderX) {
+                positions[i3] = borderX;
+            }
+
+            if (positions[i3 + 1] > borderY) {
+                positions[i3 + 1] = -borderY;
+            }
+            if (positions[i3 + 1] < -borderY) {
+                positions[i3 + 1] = borderY;
+            }
         }
 
         particlesGeometry.attributes.position.needsUpdate = true;
 
         // Existing rotation for geometry
-        targetX = mouseX * 0.001; // Fallback to mouse if no gyro
-        targetY = mouseY * 0.001;
+        if (!hasGyro) {
+            targetX = mouseX * 0.001;
+            targetY = mouseY * 0.001;
+        }
 
         geoMesh.rotation.x += 0.002;
         geoMesh.rotation.y += 0.002;
