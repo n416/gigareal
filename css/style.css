@@ -2,11 +2,15 @@
     /* Colors - Light Mode */
     --bg-color: #f0f4f8;
     --text-color: #333333;
-    --text-muted: #555555; /* Slightly darker */
+    --text-muted: #555555;
     --accent-color: #007bff;
-    --card-bg: rgba(255, 255, 255, 0.95); /* Much more opaque */
+    --card-bg: rgba(255, 255, 255, 0.85); /* Slightly more transparent for glass effect */
     --card-border: rgba(255, 255, 255, 0.6);
-    --shadow-color: rgba(0, 0, 0, 0.2); /* Increased shadow */
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    
+    /* Gradient Accents */
+    --gradient-1: rgba(0, 123, 255, 0.15);
+    --gradient-2: rgba(100, 200, 255, 0.1);
     
     /* Layout */
     --card-width: 600px;
@@ -19,9 +23,13 @@
     --text-color: #e0e0e0;
     --text-muted: #a0a0a0;
     --accent-color: #4da3ff;
-    --card-bg: rgba(20, 20, 30, 0.95); /* Much more opaque */
-    --card-border: rgba(255, 255, 255, 0.15);
-    --shadow-color: rgba(0, 0, 0, 0.6); /* Increased shadow */
+    --card-bg: rgba(20, 20, 30, 0.85);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.4);
+
+    /* Gradient Accents */
+    --gradient-1: rgba(77, 163, 255, 0.15);
+    --gradient-2: rgba(111, 189, 202, 0.1);
 }
 
 * {
@@ -34,22 +42,17 @@ body {
     font-family: 'Inter', 'Noto Sans JP', sans-serif;
     color: var(--text-color);
     background-color: var(--bg-color);
-    overflow: hidden; /* Prevent scroll for 3D background */
+    /* Premium Gradient Background */
+    background-image: 
+        radial-gradient(circle at 10% 20%, var(--gradient-1), transparent 40%),
+        radial-gradient(circle at 90% 80%, var(--gradient-2), transparent 40%);
+    background-attachment: fixed;
     height: 100vh;
-    width: 100%; /* Changed from 100vw to avoid scrollbar issues */
+    width: 100%;
     transition: background-color 0.3s ease, color 0.3s ease;
-    touch-action: pan-y; /* Allow vertical scroll gestures */
 }
 
-/* Background Canvas */
-#canvas-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
+
 
 /* Main Container */
 .main-container {
@@ -303,9 +306,7 @@ body {
 /* Responsive */
 @media (max-width: 768px), (max-height: 600px) and (orientation: landscape) {
     /* Background Canvas */
-    #canvas-container {
-        pointer-events: none; /* Ignore all touch events on canvas */
-    }
+
 
     html, body {
         overflow-y: auto; /* Enable scroll on mobile */
@@ -350,56 +351,4 @@ body {
     }
 }
 
-/* Gyro Controls */
-.gyro-controls {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    z-index: 900;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
-}
 
-.gyro-controls.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
-.glass-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 30px;
-    padding: 10px 16px;
-    color: var(--text-color);
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.glass-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.glass-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
-[data-theme="light"] .glass-btn {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
-    color: var(--text-color);
-}
-
-[data-theme="light"] .glass-btn:hover {
-    background: rgba(0, 0, 0, 0.1);
-}
