@@ -98,6 +98,7 @@ body {
     font-weight: 800;
     letter-spacing: 0.1em;
     background: linear-gradient(135deg, #183A8A, #1179BD);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -105,6 +106,7 @@ body {
 
 [data-theme="dark"] .hero-title {
     background: linear-gradient(135deg, #4da3ff, #6FBDCA);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 30px rgba(77, 163, 255, 0.4);
@@ -309,4 +311,58 @@ body {
     .hero-logo {
         width: 120px;
     }
+}
+
+/* Gyro Controls */
+.gyro-controls {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 900;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.gyro-controls.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.glass-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    padding: 10px 16px;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.glass-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+[data-theme="light"] .glass-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.1);
+    color: var(--text-color);
+}
+
+[data-theme="light"] .glass-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
 }
