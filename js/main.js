@@ -89,16 +89,63 @@ function initThreeJS() {
     const windowHalfX = window.innerWidth / 2;
     const windowHalfY = window.innerHeight / 2;
 
-    // Mouse Interaction
-    document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX - windowHalfX);
-        mouseY = (event.clientY - windowHalfY);
+    // Interaction State for Polygon
+    let isDragging = false;
+    let previousMousePosition = { x: 0, y: 0 };
+    let dragVelocity = { x: 0, y: 0 };
+    let dragTargetRotation = { x: 0, y: 0 };
+    let dragTargetColor = new THREE.Color();
+    let dragColorHue = 0;
 
-        // Map mouse to gravity for desktop testing
-        if (!hasGyro) {
-            gravityX = (mouseX / windowHalfX) * gravityStrength;
-            gravityY = -(mouseY / windowHalfY) * gravityStrength;
+    // Pointer Events for Interaction
+    document.addEventListener('pointerdown', (event) => {
+        isDragging = true;
+        previousMousePosition = { x: event.clientX, y: event.clientY };
+    });
+
+    document.addEventListener('pointermove', (event) => {
+        if (isDragging) {
+            const deltaMove = {
+                x: event.clientX - previousMousePosition.x,
+                y: event.clientY - previousMousePosition.y
+            };
+
+            // Calculate rotation based on drag
+            dragVelocity.x = deltaMove.y * 0.005; // Vertical drag rotates around X axis
+            dragVelocity.y = deltaMove.x * 0.005; // Horizontal drag rotates around Y axis
+
+            // Update rotation target
+            dragTargetRotation.x += dragVelocity.x;
+            dragTargetRotation.y += dragVelocity.y;
+
+            // Generate Color based on drag direction/angle
+            // Angle in radians: Math.atan2(y, x)
+            const angle = Math.atan2(deltaMove.y, deltaMove.x);
+            // Map angle (-PI to PI) to Hue (0 to 1)
+            // Start from current hue and shift based on movement intensity
+            const speed = Math.sqrt(deltaMove.x ** 2 + deltaMove.y ** 2);
+            dragColorHue = (dragColorHue + speed * 0.002) % 1;
+
+            dragTargetColor.setHSL(dragColorHue, 0.7, 0.5);
+
+            // Apply immediate feedback to object color
+            geoMesh.material.color.lerp(dragTargetColor, 0.1);
+
+            previousMousePosition = { x: event.clientX, y: event.clientY };
+        } else {
+            // Standard mouse tracking for parallax when not dragging
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+
+            if (!hasGyro) {
+                gravityX = (mouseX / windowHalfX) * gravityStrength;
+                gravityY = -(mouseY / windowHalfY) * gravityStrength;
+            }
         }
+    });
+
+    document.addEventListener('pointerup', () => {
+        isDragging = false;
     });
 
     // Physics State
@@ -106,8 +153,6 @@ function initThreeJS() {
     const gravityStrength = 0.05;
     let gravityX = 0;
     let gravityY = 0;
-
-    // Bounds logic removed, replaced with dynamic calculation in animate()
 
     // Gyroscope Permission Handling
     const gyroBtnContainer = document.getElementById('gyro-controls');
@@ -165,8 +210,10 @@ function initThreeJS() {
         gravityY = (-beta / maxTilt) * gravityStrength; // Invert Beta for natural feel
 
         // Update parallax target for geometric shape
-        targetX = gamma * 0.05;
-        targetY = beta * 0.05;
+        if (!isDragging) {
+            targetX = gamma * 0.05;
+            targetY = beta * 0.05;
+        }
     }
 
     // Animation Loop
@@ -196,14 +243,8 @@ function initThreeJS() {
             positions[i3] += Math.sin(clock.getElapsedTime() * 0.5 + i) * 0.002;
 
             // Dynamic Bounds Calculation based on Camera FOV
-            // Calculate visible height at the particle's Z depth
-            // Camera is at z=5. Particle z is 0 (since we only set x,y in geometry initialization, z defaults to 0)
-            // But let's be robust:
             const particleZ = positions[i3 + 2] || 0;
             const dist = camera.position.z - particleZ;
-
-            // Visible height at this distance = 2 * dist * tan(fov / 2)
-            // generic formula: visible_height = 2 * distance * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
             const vHeight = 2 * dist * Math.tan((camera.fov * Math.PI / 180) / 2);
             const vWidth = vHeight * camera.aspect;
 
@@ -229,18 +270,35 @@ function initThreeJS() {
 
         particlesGeometry.attributes.position.needsUpdate = true;
 
-        // Existing rotation for geometry
-        if (!hasGyro) {
-            targetX = mouseX * 0.001;
-            targetY = mouseY * 0.001;
+        if (isDragging) {
+            // Apply drag velocity with momentum
+            geoMesh.rotation.x += dragVelocity.x;
+            geoMesh.rotation.y += dragVelocity.y;
+
+            // Decay drag velocity (friction)
+            dragVelocity.x *= 0.95;
+            dragVelocity.y *= 0.95;
+        } else {
+            // Standard behavior when not dragging (gyro or mouse parallax)
+            if (!hasGyro) {
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+            }
+
+            geoMesh.rotation.x += 0.002;
+            geoMesh.rotation.y += 0.002;
+
+            // Lerp geometry position
+            geoMesh.position.x += (targetX * 2 - geoMesh.position.x) * 0.05;
+            geoMesh.position.y += (-targetY * 2 - geoMesh.position.y) * 0.05;
         }
 
-        geoMesh.rotation.x += 0.002;
-        geoMesh.rotation.y += 0.002;
-
-        // Lerp geometry position
-        geoMesh.position.x += (targetX * 2 - geoMesh.position.x) * 0.05;
-        geoMesh.position.y += (-targetY * 2 - geoMesh.position.y) * 0.05;
+        // Always gently revert color to theme default if not dragging (optional, interaction feel)
+        if (!isDragging) {
+            const defaultColorHex = body.getAttribute('data-theme') === 'dark' ? 0x6FBDCA : 0x183A8A;
+            const defaultColor = new THREE.Color(defaultColorHex);
+            geoMesh.material.color.lerp(defaultColor, 0.05);
+        }
 
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
