@@ -99,6 +99,9 @@ function initThreeJS() {
 
     // Pointer Events for Interaction
     document.addEventListener('pointerdown', (event) => {
+        // Disable drag interaction on mobile to prioritize scrolling
+        if (window.innerWidth <= 768) return;
+
         isDragging = true;
         previousMousePosition = { x: event.clientX, y: event.clientY };
     });
