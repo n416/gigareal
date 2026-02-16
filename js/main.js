@@ -198,21 +198,30 @@ function initThreeJS() {
 
         hasGyro = true;
 
-        // Beta: front-to-back tilt [-180, 180] -> Y gravity
+        // Beta: front-to-back tilt [-180, 180]
+        // Shift neutral point to vertical (90 degrees)
+        const neutralBeta = 90;
+        const currentBeta = event.beta;
+
+        // Calculate tilt relative to vertical
+        // If holding upright (90), tilt is 0.
+        // If tilting back (e.g., 60), tilt is -30. Gravity should be negative (fall down).
+        let tiltBeta = currentBeta - neutralBeta;
+
         // Gamma: left-to-right tilt [-90, 90] -> X gravity
 
         // Clamp values to avoid extreme speeds
         const maxTilt = 45;
-        const beta = Math.max(-maxTilt, Math.min(maxTilt, event.beta));
-        const gamma = Math.max(-maxTilt, Math.min(maxTilt, event.gamma));
+        const clampedBeta = Math.max(-maxTilt, Math.min(maxTilt, tiltBeta));
+        const clampedGamma = Math.max(-maxTilt, Math.min(maxTilt, event.gamma));
 
-        gravityX = (gamma / maxTilt) * gravityStrength;
-        gravityY = (-beta / maxTilt) * gravityStrength; // Invert Beta for natural feel
+        gravityX = (clampedGamma / maxTilt) * gravityStrength;
+        gravityY = (clampedBeta / maxTilt) * gravityStrength;
 
         // Update parallax target for geometric shape
         if (!isDragging) {
-            targetX = gamma * 0.05;
-            targetY = beta * 0.05;
+            targetX = clampedGamma * 0.05;
+            targetY = clampedBeta * 0.05;
         }
     }
 
