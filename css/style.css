@@ -301,18 +301,20 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    body {
+    html, body {
         overflow-y: auto; /* Enable scroll on mobile */
         height: auto;
         min-height: 100vh;
+        min-height: 100dvh; /* Use dvh for real mobile browsers (address bar support) */
     }
 
     .main-container {
         height: auto;
         min-height: 100vh;
+        min-height: 100dvh;
         justify-content: flex-start; /* Align to top to allow scrolling */
         padding-top: 60px;
-        padding-bottom: 100px; /* Space for footer */
+        padding-bottom: 120px; /* Space for footer and browser UI */
     }
 
     .hero-content {
