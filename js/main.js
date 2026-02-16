@@ -300,6 +300,30 @@ function initThreeJS() {
             // Lerp geometry position
             geoMesh.position.x += (targetX * 2 - geoMesh.position.x) * 0.05;
             geoMesh.position.y += (-targetY * 2 - geoMesh.position.y) * 0.05;
+
+            // Restrict movement to visible screen area
+            const dist = camera.position.z; // geoMesh is at z=0
+            const vHeight = 2 * dist * Math.tan((camera.fov * Math.PI / 180) / 2);
+            const vWidth = vHeight * camera.aspect;
+            const radius = 1.5; // Poly radius
+            // Safe margin prevents the object from touching the very edge
+            const safeMargin = radius + 0.5;
+
+            // Clamp Y
+            const limitY = (vHeight / 2) - safeMargin;
+            if (limitY > 0) {
+                geoMesh.position.y = Math.max(-limitY, Math.min(limitY, geoMesh.position.y));
+            } else {
+                geoMesh.position.y = 0;
+            }
+
+            // Clamp X
+            const limitX = (vWidth / 2) - safeMargin;
+            if (limitX > 0) {
+                geoMesh.position.x = Math.max(-limitX, Math.min(limitX, geoMesh.position.x));
+            } else {
+                geoMesh.position.x = 0;
+            }
         }
 
         // Always gently revert color to theme default if not dragging (optional, interaction feel)
