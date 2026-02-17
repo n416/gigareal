@@ -16,6 +16,46 @@
 </head>
 <body>
 
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#" class="logo-link"><div class="logo">GIGAREAL</div></a>
+            
+            <!-- Desktop Nav -->
+            <nav class="main-nav desktop-nav">
+                <ul>
+                    <li><a href="#philosophy">MISSION</a></li>
+                    <li><a href="#approach">APPROACH</a></li>
+                    <li><a href="#service">SERVICE</a></li>
+                    <li><a href="#company-profile">COMPANY</a></li>
+                    <li><button id="nav-contact-btn" class="btn-nav">CONTACT</button></li>
+                </ul>
+            </nav>
+
+            <!-- Mobile Actions -->
+            <div class="mobile-actions">
+                <button id="mobile-contact-btn" class="btn-mobile-contact" aria-label="Contact">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </button>
+                <button id="mobile-menu-btn" class="btn-mobile-menu" aria-label="Menu">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="mobile-menu">
+            <nav>
+                <ul>
+                    <li><a href="#philosophy" class="mobile-link">MISSION</a></li>
+                    <li><a href="#approach" class="mobile-link">APPROACH</a></li>
+                    <li><a href="#service" class="mobile-link">SERVICE</a></li>
+                    <li><a href="#company-profile" class="mobile-link">COMPANY</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
     <!-- Main Content -->
     <main class="main-container">
         <section id="hero-section" class="hero-content">
@@ -23,11 +63,142 @@
                 <img src="logo.svg" alt="GIGAREAL Logo" class="hero-logo">
             </div>
             <h1 class="hero-title">GIGAREAL</h1>
-            <p class="hero-tagline">AIが作る ギガなリアル！</p>
+            <p class="hero-tagline" id="typewriter-text"></p>
+            <p class="hero-subline">未知なる世界への到達点。<br>AIの可能性を最大化し、誰も見たことのない未来を実装する。</p>
             
             <div class="hero-actions">
                 <button id="open-contact" class="btn-primary btn-large">お問い合わせ</button>
             </div>
+        </section>
+
+        <!-- Philosophy Section -->
+        <section id="philosophy" class="glass-card section-container philosophy-section">
+            <h2 class="section-title">MISSION & VISION</h2>
+            <div class="philosophy-content">
+                <p class="philosophy-main">AIが作り出す可能性を、極限まで引き出す。</p>
+                <p class="philosophy-text">
+                    ソフトウェアという枠を超え、AIとともに新たな現実を創造する。<br>
+                    私たちは既存の技術の延長線上にはない、「誰も見たことがない世界」を目指しています。<br>
+                    AIが見せる夢を、確かな技術で「リアル」に変えていく。それがGIGAREALの使命です。
+                </p>
+            </div>
+        </section>
+
+        <!-- Approach Section -->
+        <section id="approach" class="section-container approach-section">
+            <h2 class="section-title">OUR APPROACH</h2>
+            <p class="section-description">AI×人間の共創が、開発等の常識を覆す。</p>
+
+            <div class="approach-grid">
+                <!-- 1. AI Nature -->
+                <div class="glass-card approach-card">
+                    <div class="approach-icon">
+                        <!-- Dice / Probability -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><circle cx="12" cy="12" r="1.5"></circle><circle cx="7.5" cy="7.5" r="1.5"></circle><circle cx="16.5" cy="16.5" r="1.5"></circle><circle cx="16.5" cy="7.5" r="1.5"></circle><circle cx="7.5" cy="16.5" r="1.5"></circle></svg>
+                    </div>
+                    <h3>AIは「確率機」である</h3>
+                    <p>
+                        AIは魔法ではありません。膨大なデータから最も確からしい答えを導き出す「確率機」です。<br>
+                        だからこそ、人間が「どの方向へ導くか」が重要になります。<br>
+                        どんな<strong>スクリプト（指示）</strong>を与え、<strong>どのタイミングで同期</strong>を取り、軌道修正を行うか。<br>
+                        GIGAREALは、このAIとの対話技術において圧倒的なノウハウを持っています。
+                    </p>
+                </div>
+
+                <!-- 2. Multi-Agent -->
+                <div class="glass-card approach-card highlight-card">
+                    <div class="approach-icon">
+                        <!-- Robot / Agent -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><circle cx="12" cy="5" r="2"></circle><path d="M12 7v4"></path><line x1="8" y1="16" x2="8" y2="16"></line><line x1="16" y1="16" x2="16" y2="16"></line></svg>
+                    </div>
+                    <h3>マルチエージェント開発</h3>
+                    <p>
+                        私たちは2024年から、複数のAIエージェントを協調させる開発手法を導入しました。<br>
+                        その成果は劇的です。従来の開発手法と比較して、<span class="text-highlight">20倍以上の生産性</span>を記録しています。<br>
+                        要件定義から実装、テストまで、AIエージェントが自律的に連携し、驚異的なスピードでプロジェクトを推進します。
+                    </p>
+                </div>
+
+                <!-- 3. Experience -->
+                <div class="glass-card approach-card">
+                    <div class="approach-icon">
+                        <!-- Shield / Security -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </div>
+                    <h3>20年以上の実績</h3>
+                    <p>
+                        AI技術の活用だけではありません。私たちの根底にあるのは、<strong>20年以上にわたるシステム開発の確かな実績</strong>です。<br>
+                        長年培ったアーキテクチャ設計、セキュリティ、運用の知見があるからこそ、AIの暴走を防ぎ、実用的なシステムへと昇華させることができます。
+                    </p>
+                </div>
+
+                <!-- 4. Prototyping -->
+                <div class="glass-card approach-card special-card">
+                    <div class="approach-icon">
+                        <!-- Lightning / Speed -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    </div>
+                    <h3>超高速プロトタイピング</h3>
+                    <p>
+                        「動くもの」を見るまでの時間が、劇的に短縮されます。<br>
+                        アイディアを即座に形にし、触って検証し、改善する。<br>
+                        かつてないスピード感での開発を、ぜひご体験ください。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Section -->
+        <section id="service" class="section-container service-section">
+            <h2 class="section-title">SERVICE</h2>
+            <p class="section-description">先端技術とAIを融合させた、3つのコアソリューション。</p>
+            
+            <div class="service-grid">
+                <div class="glass-card service-card">
+                    <h3>Communication Tech</h3>
+                    <h4>WebRTCチャットシステム</h4>
+                    <p>リアルタイム通信技術WebRTCを駆使した、低遅延かつ高機能なチャットプラットフォーム。ビジネスからエンターテインメントまで、"今"を共有するコミュニケーションを支えます。</p>
+                </div>
+
+                <div class="glass-card service-card">
+                    <h3>Medical DX <span class="badge">Dev</span></h3>
+                    <h4>AI医療レセプトコンピューター</h4>
+                    <p>複雑なレセプト業務をAIが強力にサポート。医療現場の負担を劇的に軽減し、医療従事者が患者様と向き合う時間を最大化するための次世代システムです。</p>
+                </div>
+
+                <div class="glass-card service-card">
+                    <h3>AI Character</h3>
+                    <h4>AI応答マスコットアプリ</h4>
+                    <p>ただのボットではない、心を通わせるパートナー。最新の言語モデルを搭載し、ユーザーに寄り添うマスコットキャラクターとの新しい対話体験を提供します。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Company Profile Section -->
+        <section id="company-profile" class="glass-card section-container profile-section">
+            <h2 class="section-title">COMPANY</h2>
+            <dl class="profile-list">
+                <dt>法人番号</dt>
+                <dd>8010001188553</dd>
+                
+                <dt>本店所在地</dt>
+                <dd>栃木県日光市鬼怒川温泉大原字下ノ内１０４３番地５</dd>
+                
+                <dt>東京営業所</dt>
+                <dd>東京都豊島区高田３－１４－２６</dd>
+                
+                <dt>主な取引先</dt>
+                <dd>
+                    <ul class="client-list">
+                        <li>株式会社如月システム</li>
+                        <li>株式会社白水建設</li>
+                        <li>みずほ銀行</li>
+                    </ul>
+                </dd>
+                
+                <dt>連絡先</dt>
+                <dd><a href="mailto:support@gigareal.co.jp">support@gigareal.co.jp</a></dd>
+            </dl>
         </section>
 
         <footer class="site-footer">
@@ -42,6 +213,11 @@
     </main>
 
 
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
 
     <!-- Contact Modal -->
     <div id="contact-modal" class="modal-overlay hidden">
