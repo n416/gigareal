@@ -57,6 +57,15 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Logo Click -> Scroll to Top
+document.querySelector('.logo-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 // Back to Top Logic
 const backToTopBtn = document.getElementById('back-to-top');
 
@@ -76,26 +85,7 @@ backToTopBtn.addEventListener('click', () => {
 });
 
 
-// Dynamic Background Logic
-window.addEventListener('scroll', () => {
-    const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
 
-    // Move slightly based on scroll
-    // x1: 10% -> 30%
-    const x1 = 10 + (scrollPercent * 20);
-    // y1: 20% -> 40%
-    const y1 = 20 + (scrollPercent * 20);
-
-    // x2: 90% -> 70%
-    const x2 = 90 - (scrollPercent * 20);
-    // y2: 80% -> 60%
-    const y2 = 80 - (scrollPercent * 20);
-
-    document.body.style.setProperty('--bg-pos-x1', `${x1}%`);
-    document.body.style.setProperty('--bg-pos-y1', `${y1}%`);
-    document.body.style.setProperty('--bg-pos-x2', `${x2}%`);
-    document.body.style.setProperty('--bg-pos-y2', `${y2}%`);
-});
 
 // Typewriter Effect
 const textToType = "AIが作る、ギガなリアル。";
@@ -114,4 +104,75 @@ function typeWriter() {
 }
 
 // Start typing when page loads
+// Start typing when page loads
 window.addEventListener('load', typeWriter);
+
+
+// Approach Section - Scroll Triggered Typewriter (HTML Aware)
+document.addEventListener('DOMContentLoaded', () => {
+    const approachParagraphs = document.querySelectorAll('.approach-card p');
+
+    // Store original HTML and clear content/height preservation
+    const textMap = new Map();
+
+    approachParagraphs.forEach((p, index) => {
+        // Save original height to prevent layout shift
+        const height = p.offsetHeight;
+        p.style.minHeight = `${height}px`;
+
+        textMap.set(p, p.innerHTML);
+        p.innerHTML = '';
+        p.classList.add('typing-cursor'); // Add cursor
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const target = entry.target;
+                const htmlContent = textMap.get(target);
+
+                if (htmlContent && !target.dataset.typed) {
+                    target.dataset.typed = "true"; // Flag to prevent re-typing
+                    typeWriterHTML(target, htmlContent, 30); // 30ms speed
+                }
+                observer.unobserve(target);
+            }
+        });
+    }, { threshold: 0.2 }); // Trigger when 20% visible
+
+    approachParagraphs.forEach(p => observer.observe(p));
+});
+
+function typeWriterHTML(element, html, speed) {
+    let i = 0;
+    let currentHTML = '';
+
+    function type() {
+        if (i < html.length) {
+            const char = html.charAt(i);
+
+            if (char === '<') {
+                // Find closing '>'
+                const closingIndex = html.indexOf('>', i);
+                if (closingIndex !== -1) {
+                    currentHTML += html.substring(i, closingIndex + 1);
+                    i = closingIndex + 1;
+                } else {
+                    currentHTML += char;
+                    i++;
+                }
+            } else {
+                currentHTML += char;
+                i++;
+            }
+
+            element.innerHTML = currentHTML;
+            setTimeout(type, speed);
+        } else {
+            // Remove cursor after finishing
+            element.classList.remove('typing-cursor');
+        }
+    }
+
+    type();
+}

@@ -8,17 +8,15 @@
     --card-border: rgba(255, 255, 255, 0.6);
     --shadow-color: rgba(0, 0, 0, 0.1);
     
-    /* Gradient Accents */
+
+    /* Gradient Accents - Reverted to original */
     --gradient-1: rgba(0, 123, 255, 0.15);
     --gradient-2: rgba(100, 200, 255, 0.1);
-    
-    /* Layout */
-    /* Dynamic Background Variables */
-    --bg-pos-x1: 10%;
-    --bg-pos-y1: 20%;
-    --bg-pos-x2: 90%;
-    --bg-pos-y2: 80%;
 }
+
+/* Canvas Background */
+
+
 
 [data-theme="dark"] {
     /* Colors - Dark Mode */
@@ -26,9 +24,9 @@
     --text-color: #e0e0e0;
     --text-muted: #a0a0a0;
     --accent-color: #4da3ff;
-    --card-bg: rgba(20, 20, 30, 0.85);
-    --card-border: rgba(255, 255, 255, 0.1);
-    --shadow-color: rgba(0, 0, 0, 0.4);
+    --card-bg: rgba(30, 40, 60, 0.7);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --shadow-color: rgba(0, 0, 0, 0.6);
 
     /* Gradient Accents */
     --gradient-1: rgba(77, 163, 255, 0.15);
@@ -49,18 +47,27 @@ html {
 body {
     font-family: 'Inter', 'Noto Sans JP', sans-serif;
     color: var(--text-color);
-    background-color: var(--bg-color);
-    /* Premium Gradient Background */
-    background-image: 
-        radial-gradient(circle at var(--bg-pos-x1) var(--bg-pos-y1), var(--gradient-1), transparent 40%),
-        radial-gradient(circle at var(--bg-pos-x2) var(--bg-pos-y2), var(--gradient-2), transparent 40%);
-    background-attachment: fixed;
+    background: linear-gradient(-45deg, #f0f4f8, #e6f0ff, #f0f8ff, #f5f5f5);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
     height: 100vh;
     width: 100%;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: color 0.3s ease;
+    overflow-x: hidden;
 }
 
-/* Scroll Offset & Target Highlight */
+body[data-theme="dark"] {
+    background: linear-gradient(-45deg, #0d1117, #161b22, #0f1c2e, #1a1a2e);
+    background-size: 400% 400%;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
 section[id] {
     scroll-margin-top: 100px; /* Offset for fixed header */
 }
@@ -89,10 +96,10 @@ section[id].highlight {
     min-height: 100vh; /* Changed from height: 100vh */
     height: auto;
     padding: 20px;
-    padding-top: 80px; /* Add top padding to balance layout */
-    padding-bottom: 80px; /* Add bottom padding for footer */
+    padding-top: 200px; /* Header ~80px + Gap 120px */
+    padding-bottom: 120px; /* Matches Gap */
     position: relative;
-    gap: 120px; /* Increased from 40px for better separation */
+    gap: 120px;
 }
 
 /* Hero Section */
@@ -255,7 +262,8 @@ section[id].highlight {
 }
 
 .modal-container {
-    max-width: 500px;
+    max-width: 700px;
+    width: 90%; /* Ensure responsiveness */
     position: relative;
     transform: translateY(20px);
     transition: transform 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
@@ -290,6 +298,11 @@ section[id].highlight {
     box-shadow: 0 8px 32px 0 var(--shadow-color);
     border-radius: var(--border-radius);
     padding: 40px;
+}
+
+[data-theme="dark"] .glass-card {
+    background: rgba(20, 20, 30, 0.85);
+    border-color: var(--card-border);
 }
 
 /* Form */
@@ -364,7 +377,7 @@ section[id].highlight {
 
 .profile-list {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 150px 1fr; /* Fixed width for labels looks cleaner left-aligned */
     gap: 12px; /* Reduced from 16px */
     align-items: baseline;
 }
@@ -372,7 +385,7 @@ section[id].highlight {
 .profile-list dt {
     font-weight: 600;
     color: var(--text-muted);
-    text-align: right;
+    text-align: left;
     padding-right: 16px;
     position: relative;
 }
@@ -384,6 +397,7 @@ section[id].highlight {
 .profile-list dd {
     font-weight: 400;
     color: var(--text-color);
+    text-align: left; /* Explicitly force left alignment */
 }
 
 .client-list {
@@ -422,8 +436,6 @@ section[id].highlight {
 /* Responsive */
 @media (max-width: 768px), (max-height: 600px) and (orientation: landscape) {
     /* Background Canvas */
-
-
     html, body {
         overflow-y: auto; /* Enable scroll on mobile */
         overflow-x: hidden; /* Prevent horizontal scroll */
@@ -438,8 +450,9 @@ section[id].highlight {
         min-height: 100vh;
         min-height: 100dvh;
         justify-content: flex-start; /* Align to top to allow scrolling */
-        padding-top: 60px;
-        padding-bottom: 120px; /* Space for footer and browser UI */
+        padding-top: 120px; /* Header ~60px + Gap 60px */
+        padding-bottom: 60px; /* Matches Gap */
+        gap: 60px;
     }
 
     .hero-content {
@@ -681,9 +694,7 @@ section[id].highlight {
 }
 
 /* Company Profile Updates */
-.profile-section h2 {
-    display: none; /* Hide old h2 in favor of section-title */
-}
+/* Title visibility restored */
 
 /* Responsive Updates for Header */
 @media (max-width: 768px) {
@@ -791,6 +802,13 @@ section[id].highlight {
     border-top-color: var(--accent-color);
 }
 
+.typing-cursor::after {
+    content: '|';
+    animation: blink-cursor 0.75s step-end infinite;
+    color: var(--accent-color);
+    margin-left: 2px;
+}
+
 .approach-icon {
     display: flex;
     justify-content: center;
@@ -827,6 +845,7 @@ section[id].highlight {
 .highlight-card {
     background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,248,255,0.9));
     border: 1px solid rgba(0, 123, 255, 0.3);
+    border-top: 4px solid transparent; /* Hidden by default, visible on hover */
 }
 
 [data-theme="dark"] .highlight-card {
