@@ -1,0 +1,13 @@
+# Helper files
+.dev.vars
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+.wrangler
+
+# System files
+.DS_Store
+Thumbs.db
