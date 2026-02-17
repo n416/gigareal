@@ -8,8 +8,15 @@ export async function onRequestPost(context) {
     const email = formData.get('email');
     const message = formData.get('message');
 
-    // 簡易バリデーション
+    // デバッグ用ログ: 環境変数の読み込み確認
+    console.log('--- Debug Start ---');
+    console.log('RESEND_API_KEY exists:', !!env.RESEND_API_KEY, env.RESEND_API_KEY ? `(Starts with ${env.RESEND_API_KEY.substring(0, 5)}...)` : '');
+    console.log('ADMIN_EMAIL:', env.ADMIN_EMAIL);
+    console.log('FROM_EMAIL:', env.FROM_EMAIL);
+
+    // 必須項目のチェック
     if (!name || !email || !message) {
+      console.log('Validation Error: Missing fields', { name, email, message: !!message });
       return new Response(JSON.stringify({ error: '必須項目が不足しています。' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -18,11 +25,11 @@ export async function onRequestPost(context) {
 
     // 環境変数のチェック
     const RESEND_API_KEY = env.RESEND_API_KEY;
-    const ADMIN_EMAIL = env.ADMIN_EMAIL || 'admin@example.com'; // 管理者の受信アドレス
-    const FROM_EMAIL = env.FROM_EMAIL || 'onboarding@resend.dev'; // 送信元アドレス
+    const ADMIN_EMAIL = env.ADMIN_EMAIL || 'admin@example.com';
+    const FROM_EMAIL = env.FROM_EMAIL || 'onboarding@resend.dev';
 
     if (!RESEND_API_KEY) {
-      console.error('RESEND_API_KEY is not set');
+      console.error('Critical Error: RESEND_API_KEY is missing');
       return new Response(JSON.stringify({ error: 'サーバー設定エラー: APIキーが設定されていません。' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
@@ -30,6 +37,8 @@ export async function onRequestPost(context) {
     }
 
     // 1. 管理者への通知メール送信
+    console.log('Sending email to admin...', { to: ADMIN_EMAIL, from: FROM_EMAIL });
+
     const adminEmailRes = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -53,9 +62,17 @@ export async function onRequestPost(context) {
 
     if (!adminEmailRes.ok) {
       const errorData = await adminEmailRes.json();
-      console.error('Resend Error (Admin):', errorData);
-      throw new Error('管理者へのメール送信に失敗しました。');
+      console.error('Resend Error (Admin):', JSON.stringify(errorData, null, 2));
+      // エラー詳細をクライアントに返す（デバッグ用）
+      return new Response(JSON.stringify({
+        error: `管理者へのメール送信に失敗しました。Resend Error: ${errorData.message || JSON.stringify(errorData)}`
+      }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
+
+    console.log('Admin email sent successfully.');
 
     // 2. ユーザーへの自動返信メール送信
     const userEmailRes = await fetch('https://api.resend.com/emails', {
@@ -82,9 +99,11 @@ export async function onRequestPost(context) {
     });
 
     if (!userEmailRes.ok) {
-      // ユーザーへの返信失敗はログに残すが、処理自体は成功とする（スパム判定などで落ちることもあるため）
       const errorData = await userEmailRes.json();
-      console.warn('Resend Error (Auto-reply):', errorData);
+      console.warn('Resend Error (Auto-reply):', JSON.stringify(errorData, null, 2));
+      // 自動返信失敗は致命的エラーにしない
+    } else {
+      console.log('Auto-reply email sent successfully.');
     }
 
     return new Response(JSON.stringify({ message: '送信に成功しました。' }), {
@@ -93,7 +112,8 @@ export async function onRequestPost(context) {
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
+    console.error('Unhandled Exception:', err);
+    return new Response(JSON.stringify({ error: `予期せぬエラーが発生しました: ${err.message}` }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
