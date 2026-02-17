@@ -39,42 +39,33 @@ contactForm.addEventListener('submit', async (e) => {
 
   const form = e.target;
   const data = new FormData(form);
-  const action = form.action;
-
-  // Check if form ID is configured
-  if (action.includes('YOUR_FORM_ID')) {
-    formStatus.textContent = 'エラー: 送信先が設定されていません。管理者に連絡してください。';
-    formStatus.className = 'status-message error';
-    return;
-  }
 
   formStatus.textContent = '送信中...';
   formStatus.className = 'status-message';
 
   try {
-    const response = await fetch(action, {
+    const response = await fetch('/api/contact', {
       method: 'POST',
-      body: data,
-      headers: {
-        'Accept': 'application/json'
-      }
+      body: data
     });
 
+    const result = await response.json();
+
     if (response.ok) {
-      formStatus.textContent = 'メッセージが送信されました！ありがとうございます。';
+      formStatus.textContent = result.message || 'メッセージが送信されました！ありがとうございます。';
       formStatus.className = 'status-message success';
       form.reset();
       setTimeout(closeModal, 2000);
     } else {
-      const result = await response.json();
-      if (Object.hasOwn(result, 'errors')) {
-        formStatus.textContent = result.errors.map(error => error.message).join(", ");
+      if (result.error) {
+        formStatus.textContent = `エラー: ${result.error}`;
       } else {
         formStatus.textContent = '送信中にエラーが発生しました。';
       }
       formStatus.className = 'status-message error';
     }
   } catch (error) {
+    console.error(error);
     formStatus.textContent = 'ネットワークエラーが発生しました。';
     formStatus.className = 'status-message error';
   }
