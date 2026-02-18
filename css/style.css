@@ -96,10 +96,10 @@ section[id].highlight {
     min-height: 100vh; /* Changed from height: 100vh */
     height: auto;
     padding: 20px;
-    padding-top: 200px; /* Header ~80px + Gap 120px */
-    padding-bottom: 120px; /* Matches Gap */
+    padding-top: 120px; /* Header ~80px + reduced top padding */
+    padding-bottom: 120px;
     position: relative;
-    gap: 120px;
+    gap: 60px; /* Removed gap, using padding in sections instead */
 }
 
 /* Hero Section */
@@ -450,8 +450,8 @@ section[id].highlight {
         min-height: 100vh;
         min-height: 100dvh;
         justify-content: flex-start; /* Align to top to allow scrolling */
-        padding-top: 120px; /* Header ~60px + Gap 60px */
-        padding-bottom: 60px; /* Matches Gap */
+        padding-top: 60px; /* Header ~60px + reduced top padding */
+        padding-bottom: 60px;
         gap: 60px;
     }
 
@@ -567,7 +567,8 @@ section[id].highlight {
 .section-container {
     width: 100%;
     max-width: 900px;
-    margin: 0 auto 120px; /* Increased from 60px */
+    margin: 0 auto;
+    padding: 60px 20px; /* Added padding for spacing */
     text-align: center;
 }
 
@@ -720,6 +721,10 @@ section[id].highlight {
 
     .section-title {
         font-size: 1.6rem;
+    }
+
+    .section-container {
+        padding: 60px 20px; /* Reduced padding for mobile */
     }
 }
 
