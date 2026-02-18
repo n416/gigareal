@@ -176,3 +176,42 @@ function typeWriterHTML(element, html, speed) {
 
     type();
 }
+
+// Tutorial Logic
+function checkTutorial() {
+    const tutorialSeen = localStorage.getItem('tutorial_seen');
+    const tutorialModal = document.getElementById('theme-tutorial');
+    const lightBtn = document.getElementById('tutorial-light-btn');
+    const darkBtn = document.getElementById('tutorial-dark-btn');
+
+    if (!tutorialSeen && tutorialModal) {
+        // Show modal
+        tutorialModal.classList.remove('hidden');
+
+        // Helper to set theme
+        const setTheme = (theme) => {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        // Helper to close modal and save seen state
+        const finishTutorial = () => {
+            localStorage.setItem('tutorial_seen', 'true');
+            tutorialModal.classList.add('hidden');
+        };
+
+        // Event Listeners
+        lightBtn.addEventListener('click', () => {
+            setTheme('light');
+            finishTutorial();
+        });
+
+        darkBtn.addEventListener('click', () => {
+            setTheme('dark');
+            finishTutorial();
+        });
+    }
+}
+
+// Initialize tutorial check
+window.addEventListener('load', checkTutorial);
