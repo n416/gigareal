@@ -400,6 +400,17 @@ section[id].highlight {
     text-align: left; /* Explicitly force left alignment */
 }
 
+.profile-list a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.profile-list a:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
 .client-list {
     list-style: none;
     padding: 0;
