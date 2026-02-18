@@ -644,9 +644,8 @@ section[id].highlight {
 
 .service-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 30px;
-    padding: 0 20px;
 }
 
 .service-card {
@@ -723,9 +722,6 @@ section[id].highlight {
         font-size: 1.6rem;
     }
 
-    .section-container {
-        padding: 60px 20px; /* Reduced padding for mobile */
-    }
 }
 
 /* Logo Link */
